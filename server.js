@@ -1,4 +1,8 @@
+require('dotenv').config()
+
+//-----------------------------------------------
 const express = require('express'),
+      bodyParser = require('body-parser'),
       http =    require('http'),
       api =     require('./app/router'),
       util =    require('./app/common/util'),
@@ -9,9 +13,12 @@ var port = 80;
 //-----------------------------------------------
 //-----------------------------------------------
 //-----------------------------------------------
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+//-----------------------------------------------
 app.all('*', function(req, res, next){
   logger.morgan(req);
-  //util.get_obj_struct(req, false);
   next();
 });
 
