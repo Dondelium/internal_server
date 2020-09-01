@@ -6,47 +6,28 @@ var stats = {};
 //-----------------------------------------------
 //-----------------------------------------------
 stats.routes = [
-  {method: 'get', path: '/send', src: 'set_status'}
+  {method: 'post', path: '/send', src: 'set_status'}
 ];
 //-----------------------------------------------
 //-----------------------------------------------
 //-----------------------------------------------
 stats.set_status = function(req, res){
   var info = req.body;
-/*{
-  "mem_info": {
-    "max": 948072,
-    "free": 394376,
-    "used": 553696
-  },
-  "cpu_info": {
-    "cpu": {
-      "active": 84839,
-      "cycles": 7043554
-    },
-    "cpu0": {
-      "active": 27987,
-      "cycles": 1752746
-    },
-    "cpu1": {
-      "active": 12608,
-      "cycles": 1764281
-    },
-    "cpu2": {
-      "active": 34723,
-      "cycles": 1764612
-    },
-    "cpu3": {
-      "active": 9521,
-      "cycles": 1761914
-    }
-  },
-  "temps": "52.6'C\n"
-}*/
-  pools.query(`SELECT now() AS dttm;`, null, function(err, res){
-    if(err) return response.send_failure(req, 'db check error', err);
+  var ip = req.connection.remoteAddress;
+  var cpu = info.cpu_info.cpu;
+  sql = 'INSERT INTO monitor.board_stats (ip, mem_used, mem_max, cpu_temp, cpu_active, cpu_cycles) VALUES ($1, $2, $3, $4, $5, $6);';
+  pools.query(sql, [ip, info.mem_info.used, info.mem_info.max, info.temps, cpu.active, cpu.cycles], function(err, res){
+    if(err) return response.send_failure(req, 'Stat injection error.', err);
     response.send_success(req, 'DB connection successful.', res);
   });
+  
+  for(var key in info.cpu_info){
+    if(key == 'cpu') continue;
+    sql = 'INSERT INTO monitor.core_stats (ip, core_name, core_active, core_cycles) VALUES ($1, $2, $3, $4);';
+    pools.query(sql, [ip, key, info.cpu_info[key].active, info.cpu_info[key].cycles], function(err, res){
+      if(err) console.error(err);
+    });
+  }
 };
 
 //-----------------------------------------------
