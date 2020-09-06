@@ -1,10 +1,19 @@
 {
+  "name": "OSF-Home",
+  "version": "1.0.0",
+  "description": "CIDR enforced Web Service and Admin application for RPi OSF system.",
+  "main": "server.js",
   "dependencies": {
     "body-parser": "*",
-    "connect-mongodb-session": "*",
-    "dotenv": "^8.2.0",
+    "dotenv": "*",
     "express": "*",
     "express-session": "*",
     "pg": "*"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dondelium/internal_server.git"
+  },
+  "author": "Jacob Osborne",
+  "license": "MIT"
 }

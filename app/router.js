@@ -6,12 +6,6 @@ var controllers = {};
 //-----------------------------------------------
 //-----------------------------------------------
 //-----------------------------------------------
-router.use(function(req, res, next){
-  if(!parsec.check_local_cidr(req)) return res.send('Outsider detected. Access denied!');
-  next();
-});
-
-//-----------------------------------------------
 var files = fs.readdirSync(`${__dirname}/controllers`);
 files.forEach(function (file){
   try{
@@ -31,7 +25,7 @@ files.forEach(function (file){
 
 //-----------------------------------------------
 router.all('*', function(req, res, next){
-  res.send('No API route available.');
+  res.send(parsec.build_error_response(req, res, 400, `No known route for: ${req.method} ${req.path} request.`));
 });
 
 //-----------------------------------------------

@@ -28,7 +28,18 @@ stats.set_status = function(req, res){
       if(err) console.error(err);
     });
   }
+  
+  if(new Date().getMinutes() < 5) stats.clean_aged_logs();
 };
+
+//-----------------------------------------------
+stats.clean_aged_logs = function(){
+  var sql = "DELETE FROM monitor.board_stats WHERE entry_dttm < (now() - '24:00:00.000'::interval);";
+  sql += "DELETE FROM monitor.core_stats WHERE entry_dttm < (now() - '24:00:00.000'::interval);";
+  pools.query(sql, [], function(err, res){
+      if(err) console.error(err);
+  });
+}
 
 //-----------------------------------------------
 //-----------------------------------------------
