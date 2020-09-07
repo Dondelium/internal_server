@@ -19,6 +19,8 @@ util.date_to_num_slash = function(d){
 };
 
 //-----------------------------------------------
+// Actual Utility - Little to no use beyond dev
+//-----------------------------------------------
 util.get_obj_struct = function(req, godeep){
   for(var key in req){
     var type = typeof req[key];
@@ -30,6 +32,11 @@ util.get_obj_struct = function(req, godeep){
       catch(err){console.log(`[${key}]: [Unparsable object]`);}
     }
   }
+};
+
+util.nano_time_diff = function(start){
+  var split = util.leadingzeros(process.hrtime.bigint() - start,10);
+  return split.slice(0,-9)+'.'+split.slice(-9);
 };
 
 //-----------------------------------------------

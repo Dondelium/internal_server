@@ -1,4 +1,4 @@
 var app = new Vue({
-  el: '#components-demo',
+  el: '#app',
   data: {}
 });

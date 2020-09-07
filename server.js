@@ -6,7 +6,6 @@ const express =    require('express'),
       util =       require('./app/common/util'),
       dnbf =       require('./app/dnbf'),
       parsec =     require('./app/parsec'),
-      provider =   require('./app/provider'),
       logger =     require('./app/common/logger');
 var app = express();
 var port = 80;
@@ -21,7 +20,7 @@ app.use(dnbf);
 
 //-----------------------------------------------
 app.all('/static/*', function(req, res, next){
-  provider.file_provider(req, res, '/static');
+  parsec.file_provider(req, res, '/static');
 });
 
 //-----------------------------------------------
@@ -36,7 +35,7 @@ app.use('/api/', api);
 
 //-----------------------------------------------
 app.all('*', function(req, res, next){
-  provider.file_provider(req, res, '/public', __dirname+'/public/404.html');
+  parsec.file_provider(req, res, '/public', __dirname+'/public/404.html');
 });
 
 //-----------------------------------------------

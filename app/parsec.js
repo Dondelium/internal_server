@@ -1,5 +1,6 @@
 const os = require('os'),
       fs = require('fs'),
+      path = require('path'),
       util = require('./common/util');
 var parsec = {}, mask = '', cidr = '';
 
@@ -13,6 +14,12 @@ var error_code_map = {
   404 : {"title":"Not Found", "message":"Requested source not found."},
   412 : {"title":"Precondition Failed", "message":"Login required. The client has either not logged in, lost credentials, or their session has timed out."},
   420 : {"title":"Enhance Your Calm", "message":"Client rate limited."},
+};
+
+//-----------------------------------------------
+parsec.build_error_response = function(req, res, errorcode, details = 'N/A'){
+  res.status(errorcode);
+  return {errorcode: errorcode, heading: error_code_map[errorcode].title, message: error_code_map[errorcode].message, details: details};
 };
 
 //-----------------------------------------------
@@ -53,15 +60,19 @@ parsec.parse_path = function(req, folder){
   if (fs.existsSync(path))
     return path;
   return false;
-  if(parts[parts.length-1] != 'index.html')
-    return __dirname + '/../public/404.html';
-  return false;
 };
 
 //-----------------------------------------------
-parsec.build_error_response = function(req, res, errorcode, details = 'N/A'){
-  res.status(errorcode);
-  return {errorcode: errorcode, heading: error_code_map[errorcode].title, message: error_code_map[errorcode].message, details: details};
+parsec.file_provider = function(req, res, folder, default_path = false){
+  var filepath = parsec.parse_path(req, folder);
+
+  if(filepath)
+    return res[default_path ? 'dbnf_sendFile' : 'sendFile'](path.resolve(filepath));
+
+  if(default_path)
+    return res.sendFile(path.resolve(default_path));
+
+  res.send(parsec.build_error_response(req, res, 404, `Requested file: ${req.path} does not exist.`));
 };
 
 //-----------------------------------------------
