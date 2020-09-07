@@ -14,6 +14,9 @@
     "type": "git",
     "url": "https://github.com/Dondelium/internal_server.git"
   },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "author": "Jacob Osborne",
   "license": "MIT"
 }

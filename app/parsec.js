@@ -1,5 +1,5 @@
 const os = require('os'),
-      fs = require("fs"),
+      fs = require('fs'),
       util = require('./common/util');
 var parsec = {}, mask = '', cidr = '';
 
@@ -49,12 +49,12 @@ parsec.parse_path = function(req, folder){
   if(!parts[parts.length-1]) parts[parts.length-1] = 'index.html';
   if(parts[parts.length-1].indexOf('.') == -1) parts[parts.length-1] += '.html'
   
-  var path = `${__dirname}\\..${folder.indexOf(parts[1]) == -1 ? folder : ''}${parts.join('\\')}`;
+  var path = `${__dirname}/..${folder.indexOf(parts[1]) == -1 ? folder : ''}${parts.join('/')}`;
   if (fs.existsSync(path))
     return path;
   return false;
   if(parts[parts.length-1] != 'index.html')
-    return __dirname + '\\..\\public\\404.html';
+    return __dirname + '/../public/404.html';
   return false;
 };
 

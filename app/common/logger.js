@@ -1,27 +1,24 @@
-const pools = require('./pools');
+const pools = require('./pools'),
+      util = require('./util');
 var logger = {};
 var base = {};
 
 //-----------------------------------------------
 //-----------------------------------------------
 //-----------------------------------------------
-logger.morgan = function(req){
-  console.log(`[${req.connection.remoteAddress}]: ${req.method} ${req.url}`);
-};
-
-//-----------------------------------------------
 logger.log = function(entry, key = base){
-  console.log(entry);
+  console.log(`[${util.date_to_num_slash()}]: ${entry}`);
 };
 
 //-----------------------------------------------
 logger.warning = function(entry, key = base){
-  console.log(entry);
+  logger.log(`Warning: ${entry}`);
 };
 
 //-----------------------------------------------
 logger.error = function(entry, key = base){
-  console.error(entry);
+  if(entry.stack) entry = entry.stack;
+  logger.log(`*****ERROR***** ${entry}`);
 };
 
 //-----------------------------------------------
@@ -32,6 +29,14 @@ logger.open_file = function(key){
 //-----------------------------------------------
 logger.close_file = function(key){
   console.log('Closed file');
+};
+
+//-----------------------------------------------
+//-----------------------------------------------
+//-----------------------------------------------
+logger.morgan = function(req, res, next){
+  logger.log(`${req.connection.remoteAddress} ${req.method} ${req.url}`);
+  next();
 };
 
 //-----------------------------------------------

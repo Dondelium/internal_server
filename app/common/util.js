@@ -4,8 +4,18 @@ var util = {};
 //-----------------------------------------------
 //-----------------------------------------------
 util.leadingzeros = function(string, len){
+  string = ''+string;
   while(string.length < len) string = '0'+string;
   return string;
+};
+
+//-----------------------------------------------
+util.date_to_num_slash = function(d){
+  if(!d) d = new Date();
+  var lz = util.leadingzeros;
+  var date = `${lz(d.getFullYear(),4)}/${lz(d.getMonth()+1,2)}/${lz(d.getDate(),2)}`;
+  var time = `${lz(d.getHours(),2)}:${lz(d.getMinutes(),2)}:${lz(d.getSeconds(),2)}.${lz(d.getMilliseconds(),3)}`;
+  return `${date} ${time}`;
 };
 
 //-----------------------------------------------
