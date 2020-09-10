@@ -20,7 +20,7 @@ stats.set_status = function(req, res){
     if(err) return response.send_failure(req, 'Stat injection error.', err);
     response.send_success(req, 'DB connection successful.', res);
   });
-  
+
   for(var key in info.cpu_info){
     if(key == 'cpu') continue;
     sql = 'INSERT INTO monitor.core_stats (ip, core_name, core_active, core_cycles) VALUES ($1, $2, $3, $4);';
@@ -28,7 +28,7 @@ stats.set_status = function(req, res){
       if(err) console.error(err);
     });
   }
-  
+
   if(new Date().getMinutes() < 5) stats.clean_aged_logs();
 };
 

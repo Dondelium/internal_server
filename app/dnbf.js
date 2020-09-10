@@ -42,7 +42,8 @@ dnbf.check_file_for_header = function(filepath, callback){
 //-----------------------------------------------
 dnbf.template = function(filepath, params, callback){
   var filestr = fs.readFileSync(filepath, {encoding:'utf8', flag:'r'}).split(/<dnbf>|<\/dnbf>/);
-  var base_path = filepath.substr(0, filepath.lastIndexOf('\\'));
+  var base_path = filepath.substr(0, filepath.lastIndexOf('/'));
+  if(!base_path) base_path = filepath.substr(0, filepath.lastIndexOf('\\'));
 
   try{
     for(var i = 1; i < filestr.length; i += 2)
