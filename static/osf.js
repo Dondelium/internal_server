@@ -1,1 +1,0 @@
-//document.documentElement.style.setProperty('--your-variable', '#YOURCOLOR');

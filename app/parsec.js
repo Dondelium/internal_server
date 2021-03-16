@@ -67,12 +67,11 @@ parsec.file_provider = function(req, res, folder, default_path = false){
   var filepath = parsec.parse_path(req, folder);
 
   if(filepath)
-    return res[default_path ? 'dbnf_sendFile' : 'sendFile'](path.resolve(filepath));
-
-  if(default_path)
-    return res.sendFile(path.resolve(default_path));
-
-  res.send(parsec.build_error_response(req, res, 404, `Requested file: ${req.path} does not exist.`));
+    res.sendFile(path.resolve(filepath));
+  else if(default_path)
+    res.sendFile(path.resolve(default_path));
+  else
+    res.send(parsec.build_error_response(req, res, 404, `Requested file: ${req.path} does not exist.`));
 };
 
 //-----------------------------------------------

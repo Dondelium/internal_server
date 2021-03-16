@@ -23,12 +23,12 @@ logger.error = function(entry, key = base){
 
 //-----------------------------------------------
 logger.open_file = function(key){
-  console.log('Opened file');
+  //console.log('Opened file');
 };
 
 //-----------------------------------------------
 logger.close_file = function(key){
-  console.log('Closed file');
+  //console.log('Closed file');
 };
 
 //-----------------------------------------------
