@@ -1,7 +1,7 @@
 var util = {};
 
 //-----------------------------------------------
-//-----------------------------------------------
+// General Functions
 //-----------------------------------------------
 util.leadingzeros = function(string, len){
   string = ''+string;
@@ -40,7 +40,7 @@ util.nano_time_diff = function(start){
 };
 
 //-----------------------------------------------
-//-----------------------------------------------
+// IP CIDR check system
 //-----------------------------------------------
 util.ipncidr = function(ip, cidr, mask){
   for(var i = 0; i < mask.length; i++){

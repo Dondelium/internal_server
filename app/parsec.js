@@ -1,27 +1,12 @@
 const os = require('os'),
       fs = require('fs'),
       path = require('path'),
-      util = require('./common/util');
+      util = require('./common/util'),
+      response = require('./common/response');
 var parsec = {}, mask = '', cidr = '';
 
 //-----------------------------------------------
 // Setup
-//-----------------------------------------------
-var error_code_map = {
-  400 : {"title":"Bad Request", "message":"The request could not be understood by the server."},
-  401 : {"title":"Unauthorized", "message":"Administrative access required."},
-  403 : {"title":"Forbidden", "message":"Client address location outside approved provider zone."},
-  404 : {"title":"Not Found", "message":"Requested source not found."},
-  412 : {"title":"Precondition Failed", "message":"Login required. The client has either not logged in, lost credentials, or their session has timed out."},
-  420 : {"title":"Enhance Your Calm", "message":"Client rate limited."},
-};
-
-//-----------------------------------------------
-parsec.build_error_response = function(req, res, errorcode, details = 'N/A'){
-  res.status(errorcode);
-  return {errorcode: errorcode, heading: error_code_map[errorcode].title, message: error_code_map[errorcode].message, details: details};
-};
-
 //-----------------------------------------------
 function get_local_info(){
   var nets = os.networkInterfaces();
@@ -42,13 +27,17 @@ function get_local_info(){
 //-----------------------------------------------
 // Security
 //-----------------------------------------------
-parsec.check_local_cidr = function(req){
+parsec.check_local_cidr = function(req, res, next){
   var rem_ip = req.connection.remoteAddress.replace('::ffff:','');
-  return util.ipncidr(util.ip2binary(rem_ip), cidr, mask);
+
+  if(!util.ipncidr(util.ip2binary(rem_ip), cidr, mask))
+    return response.send_error(req, 403);
+
+  next();
 };
 
 //-----------------------------------------------
-// Parse
+// File provision
 //-----------------------------------------------
 parsec.parse_path = function(req, folder){
   var parts = req.path.split('/');
@@ -71,7 +60,7 @@ parsec.file_provider = function(req, res, folder, default_path = false){
   else if(default_path)
     res.sendFile(path.resolve(default_path));
   else
-    res.send(parsec.build_error_response(req, res, 404, `Requested file: ${req.path} does not exist.`));
+    response.send_error(req, 404, `Requested file: ${req.path} does not exist.`);
 };
 
 //-----------------------------------------------

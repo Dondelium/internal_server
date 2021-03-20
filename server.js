@@ -22,11 +22,7 @@ app.all('/static/*', function(req, res, next){
 });
 
 //-----------------------------------------------
-app.all('*', function(req, res, next){
-  if(!parsec.check_local_cidr(req))
-    return res.send(parsec.build_error_response(req, res, 403));
-  next();
-});
+app.all('*', parsec.check_local_cidr);
 
 //-----------------------------------------------
 app.use('/api/', api);

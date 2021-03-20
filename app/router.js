@@ -1,6 +1,6 @@
 const router = require('express').Router(),
       fs = require('fs'),
-      parsec = require('./parsec');
+      response = require('./common/response');
 var controllers = {};
 
 //-----------------------------------------------
@@ -25,7 +25,7 @@ files.forEach(function (file){
 
 //-----------------------------------------------
 router.all('*', function(req, res, next){
-  res.send(parsec.build_error_response(req, res, 400, `No known route for: ${req.method} ${req.path} request.`));
+  response.send_error(req, 400, `No known route for: ${req.method} ${req.path} request.`);
 });
 
 //-----------------------------------------------

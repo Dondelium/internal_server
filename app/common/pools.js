@@ -1,14 +1,14 @@
 const pg = require('pg');
 var pools = {dbs: {}},
     def_base = {
-      host: 'storage.osf',
+      host: 'server.osf',
       user: process.env.dbid,
       password: process.env.dbpass,
       port: 5432,
       max: 10,
       idleTimeoutMillis: 5000
     },
-    default_db = 'pi';
+    default_db = 'lan';
 
 //-----------------------------------------------
 //-----------------------------------------------
@@ -24,8 +24,8 @@ pools.connect_db = function(db_name, callback){
 //-----------------------------------------------
 pools.query_db = function(db_name, query, values, callback){
   pools.connect_db(db_name, function(err, pool){
-    if(typeof values == 'function'){callback = values; values = null;}
     if(err) return callback(err);
+    if(typeof values == 'function'){callback = values; values = null;}
 
     pool.query(query.replace(/'null'|'NULL'|'undefined'/g, 'NULL'), values, function(err,res){
       if(err) return callback(`${err}\nWith SQL Statement:\n${query}`);
