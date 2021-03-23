@@ -1,3 +1,4 @@
+const os = require('os');
 var util = {};
 
 //-----------------------------------------------
@@ -16,6 +17,19 @@ util.date_to_num_slash = function(d){
   var date = `${lz(d.getFullYear(),4)}/${lz(d.getMonth()+1,2)}/${lz(d.getDate(),2)}`;
   var time = `${lz(d.getHours(),2)}:${lz(d.getMinutes(),2)}:${lz(d.getSeconds(),2)}.${lz(d.getMilliseconds(),3)}`;
   return `${date} ${time}`;
+};
+
+//-----------------------------------------------
+util.format_bytes = function(bytes) {
+  if(!bytes || typeof bytes != 'number') return 'NaN';
+
+  var k = 1024, i = 0, sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  while(bytes > k && i < sizes.length){
+    bytes /= k;
+    i++;
+  }
+
+  return bytes.toFixed(2)+' '+sizes[i];
 };
 
 //-----------------------------------------------
@@ -40,7 +54,42 @@ util.nano_time_diff = function(start){
 };
 
 //-----------------------------------------------
+// ID / HEX / logger / OS stuff
+//-----------------------------------------------
+util.get_time_hex = function(){
+  return new Date().getTime().toString(16);
+};
+
+//-----------------------------------------------
+util.get_machine = function(){
+  return os.hostname();
+};
+
+//-----------------------------------------------
+util.get_user = function(){
+  return os.userInfo().username;
+};
+
+//-----------------------------------------------
 // IP CIDR check system
+//-----------------------------------------------
+util.get_ip4_networks = function(){
+  var nets = os.networkInterfaces();
+  var ip4_nets = [];
+
+  for(var name in nets){
+    if(name == 'lo') continue;
+
+    for(var i in nets[name]){
+      var net = nets[name][i];
+      if(net.family != 'IPv4' || name.indexOf('Loopback') != -1) continue;
+      ip4_nets.push(net);
+    }
+  }
+  
+  return ip4_nets;
+};
+
 //-----------------------------------------------
 util.ipncidr = function(ip, cidr, mask){
   for(var i = 0; i < mask.length; i++){

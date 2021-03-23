@@ -17,11 +17,6 @@ app.use(bodyParser.json());
 app.use(logger.morgan);
 
 //-----------------------------------------------
-app.all('/static/*', function(req, res, next){
-  parsec.file_provider(req, res, '/static');
-});
-
-//-----------------------------------------------
 app.all('*', parsec.check_local_cidr);
 
 //-----------------------------------------------
@@ -29,7 +24,7 @@ app.use('/api/', api);
 
 //-----------------------------------------------
 app.all('*', function(req, res, next){
-  parsec.file_provider(req, res, '/dist', __dirname+'/dist/404.html');
+  parsec.file_provider(req, res, '/dist', __dirname+'/dist/index.html');
 });
 
 //-----------------------------------------------
@@ -37,5 +32,11 @@ app.all('*', function(req, res, next){
 //-----------------------------------------------
 var server = http.createServer(app);
 server.listen(port, () => {
-  console.log(`Local server listening on ${port}:`)
+  logger.log('----------------------------------');
+  logger.log(`Server initalized:`);
+  logger.log(`On Machine: ${util.get_machine()}`);
+  logger.log(`As User: ${util.get_user()}`);
+  logger.log('----------------------------------');
+  logger.log(`Access local server at http://localhost:${port}/:`);
+  logger.log('----------------------------------\n');
 });

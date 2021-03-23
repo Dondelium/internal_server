@@ -8,8 +8,8 @@ var error_code_map = {
   400 : {"title":"Bad Request", "message":"The request could not be understood by the server."},
   401 : {"title":"Unauthorized", "message":"Administrative access required."},
   403 : {"title":"Forbidden", "message":"Client address location outside approved provider zone."},
-  404 : {"title":"Not Found", "message":"Requested source not found."},
-  412 : {"title":"Precondition Failed", "message":"Login required. The client has either not logged in, lost credentials, or their session has timed out."},
+  404 : {"title":"Not Found", "message":"Requested static file not found."},
+  412 : {"title":"Precondition Failed", "message":"Login required. Client either not logged in, lost credentials, or session has timed out."},
   420 : {"title":"Enhance Your Calm", "message":"Client rate limited."},
 };
 
@@ -48,7 +48,6 @@ response.send_failure = function(req, message, error){
 
 //-----------------------------------------------
 response.send_response = function(req, payload){
-  logger.close_file(req);
   req.res.send(payload);
 };
 

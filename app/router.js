@@ -1,11 +1,14 @@
 const router = require('express').Router(),
       fs = require('fs'),
-      response = require('./common/response');
+      response = require('./common/response'),
+      logger = require('./common/logger');
 var controllers = {};
 
 //-----------------------------------------------
 //-----------------------------------------------
 //-----------------------------------------------
+logger.log(`Beginning route initialization.`);
+
 var files = fs.readdirSync(`${__dirname}/controllers`);
 files.forEach(function (file){
   try{
@@ -15,13 +18,15 @@ files.forEach(function (file){
       var route = controllers[filename].routes[i];
       eval(`router.${route.method}('/${filename}${route.path}', controllers.${filename}.${route.src});`);
     }
-    console.log(`Initialization completed for: /app/controllers/${file}`);
+    logger.log(`Initialization completed for: /app/controllers/${file}`);
   }
   catch(err){
-    console.error(`Initialization failed for: /app/controllers/${file}`);
-    console.error(err);
+    logger.error(`Initialization failed for: /app/controllers/${file}`);
+    logger.error(err);
   }
 });
+
+logger.log(`Routing initialization complete.\n`);
 
 //-----------------------------------------------
 router.all('*', function(req, res, next){
