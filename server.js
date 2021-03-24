@@ -7,7 +7,7 @@ const express =    require('express'),
       parsec =     require('./app/parsec'),
       logger =     require('./app/common/logger');
 var app = express();
-var port = 8080;
+var port = 80;
 
 //-----------------------------------------------
 //-----------------------------------------------
