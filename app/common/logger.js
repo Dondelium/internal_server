@@ -41,6 +41,11 @@ logger.get_run_id = function(){
 
   log_id = `${util.get_time_hex(new Date())}-${util.get_machine()}`;
   logger.log('Initializing new log:\n');
+
+  var query = `DELETE FROM ${logger_schema}.${logger_table} WHERE (now() - entry_dttm) > '7 days'::interval;`;
+  pools.query_db(logger_db, query, [], function(err, res){
+    if(err) console.error(err);
+  });
   return;
 };
 
@@ -48,8 +53,8 @@ logger.get_run_id = function(){
 logger.store_log = function(entry){
   logger.get_run_id();
   
-  var query = `INSERT INTO ${logger_schema}.${logger_table} (log_id, entry_dttm, log_entry) VALUES ($1, $2, $3);`;
-  pools.query_db(logger_db, query, [log_id, new Date(), entry], function(err, res){
+  var query = `INSERT INTO ${logger_schema}.${logger_table} (log_id, entry_dttm, log_entry) VALUES ($1, now(), $2);`;
+  pools.query_db(logger_db, query, [log_id, entry], function(err, res){
     if(err) console.error(err);
   });
 };

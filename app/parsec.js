@@ -51,7 +51,7 @@ function parse_path(req, folder){
 
   if(!parts[parts.length-1]) parts[parts.length-1] = 'index.html';
   if(parts[parts.length-1].indexOf('.') == -1) parts[parts.length-1] += '.html'
-  
+
   var path = `${__dirname}/..${folder.indexOf(parts[1]) == -1 ? folder : ''}${parts.join('/')}`;
   if (fs.existsSync(path))
     return path;
